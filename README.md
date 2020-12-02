@@ -11,7 +11,7 @@ When using this tool, you only need to pick the `wait-for` file as part of your 
 ```
 ./wait-for host:port [-t timeout] [-- command args]
   -q | --quiet                        Do not output any status messages
-  -t TIMEOUT | --timeout=timeout      Timeout in seconds, zero for no timeout
+  -t TIMEOUT | --timeout=timeout      Timeout in seconds
   -- COMMAND ARGS                     Execute command with args after the test finishes
 ```
 

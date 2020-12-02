@@ -37,7 +37,7 @@ wait_for() {
     fi
     sleep 1
   done
-  echo "Operation timed out" >&2
+  echoerr "Operation timed out"
   exit 1
 }
 

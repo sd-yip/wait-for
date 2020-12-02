@@ -1,5 +1,6 @@
 #!/bin/sh
 
+set -- "$@" -- "$TIMEOUT" "$QUIET" "$HOST" "$PORT"
 TIMEOUT=15
 QUIET=0
 
@@ -30,7 +31,19 @@ wait_for() {
     
     result=$?
     if [ $result -eq 0 ] ; then
-      if [ $# -gt 0 ] ; then
+      if [ $# -gt 5 ] ; then
+        for _ in $(seq $(($# - 5))); do
+          QUIET=$1
+          shift
+          set -- "$@" "$QUIET"
+        done
+
+        TIMEOUT=$2
+        QUIET=$3
+        HOST=$4
+        PORT=$5
+        shift 5
+
         exec "$@"
       fi
       exit 0
@@ -41,8 +54,7 @@ wait_for() {
   exit 1
 }
 
-while [ $# -gt 0 ]
-do
+while :; do
   case "$1" in
     *:* )
     HOST=$(printf "%s\n" "$1"| cut -d : -f 1)

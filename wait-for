@@ -53,9 +53,24 @@ do
     QUIET=1
     shift 1
     ;;
-    -t)
+    -q-*)
+    QUIET=0
+    echoerr "Unknown option: $1"
+    usage 1
+    ;;
+    -q*)
+    QUIET=$1
+    shift 1
+    set -- -"${QUIET#-q}" "$@"
+    QUIET=1
+    ;;
+    -t | --timeout)
     TIMEOUT="$2"
     shift 2
+    ;;
+    -t*)
+    TIMEOUT="${1#-t}"
+    shift 1
     ;;
     --timeout=*)
     TIMEOUT="${1#*=}"
@@ -68,7 +83,13 @@ do
     --help)
     usage 0
     ;;
+    -*)
+    QUIET=0
+    echoerr "Unknown option: $1"
+    usage 1
+    ;;
     *)
+    QUIET=0
     echoerr "Unknown argument: $1"
     usage 1
     ;;

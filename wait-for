@@ -16,6 +16,10 @@ Usage:
   -q | --quiet                        Do not output any status messages
   -t TIMEOUT | --timeout=timeout      Timeout in seconds
   -- COMMAND ARGS                     Execute command with args after the test finishes
+
+Source:
+  https://github.com/sd-yip/wait-for/
+
 USAGE
   exit "$exitcode"
 }

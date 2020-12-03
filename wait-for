@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -- "$@" -- "$TIMEOUT" "$QUIET" "$HOST" "$PORT"
+set -- "$@" -- "$TIMEOUT" "$QUIET" "$HOST" "$PORT" "$result"
 TIMEOUT=15
 QUIET=0
 
@@ -35,18 +35,19 @@ wait_for() {
     
     result=$?
     if [ $result -eq 0 ] ; then
-      if [ $# -gt 5 ] ; then
-        for _ in $(seq $(($# - 5))); do
-          QUIET=$1
+      if [ $# -gt 6 ] ; then
+        for result in $(seq $(($# - 6))); do
+          result=$1
           shift
-          set -- "$@" "$QUIET"
+          set -- "$@" "$result"
         done
 
         TIMEOUT=$2
         QUIET=$3
         HOST=$4
         PORT=$5
-        shift 5
+        result=$6
+        shift 6
 
         exec "$@"
       fi
@@ -81,10 +82,10 @@ while :; do
     usage 1
     ;;
     -q*)
-    QUIET=$1
-    shift 1
-    set -- -"${QUIET#-q}" "$@"
     QUIET=1
+    result=$1
+    shift 1
+    set -- -"${result#-q}" "$@"
     ;;
     -t | --timeout)
     TIMEOUT="$2"

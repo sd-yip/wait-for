@@ -1,5 +1,5 @@
-# OSX
-.DS_Store
-
-# Node
-node_modules
+/*
+!/package.json
+!/package-lock.json
+!/wait-for
+!/wait-for.bats

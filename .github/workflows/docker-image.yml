@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: Build the test Docker image
-      run: docker build --tag wait-for .
+      run: docker build --target test-runner-base --tag wait-for .
       
     - name: Run the tests
       run: docker run --tty wait-for

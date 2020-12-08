@@ -11,7 +11,7 @@ FROM test-runner-base AS test-runner
 RUN npm test
 
 
-FROM busybox:1.32.0-uclibc
+FROM alpine:3.12.1
 WORKDIR /usr/bin
 ENTRYPOINT ["wait-for"]
 

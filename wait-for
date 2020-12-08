@@ -124,7 +124,7 @@ if ! [ "$TIMEOUT" -eq "$TIMEOUT" ] 2>/dev/null; then
   usage 3
 fi
 
-if [ "$HOST" = "" ] || [ "$PORT" = "" ]; then
+if [ "$HOST" = "" ]; then
   echoerr "Error: you need to provide a host and port to test."
   usage 2
 fi

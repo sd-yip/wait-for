@@ -14,7 +14,7 @@ usage() {
 Usage:
   $0 host:port [-t timeout] [-- command args]
   -q | --quiet                        Do not output any status messages
-  -t TIMEOUT | --timeout=timeout      Timeout in seconds, negative for waiting forever
+  -t TIMEOUT | --timeout=timeout      Timeout in seconds, ∞ for waiting forever
   -- COMMAND ARGS                     Execute command with args after the test finishes
 
 Source:
@@ -54,10 +54,11 @@ wait_for() {
       exit 0
     fi
 
-    if [ $TIMEOUT -eq 0 ]; then
-      break
-    fi
-    TIMEOUT=$((TIMEOUT - 1))
+    case $TIMEOUT in
+      0) break ;;
+      ∞) ;;
+      *) TIMEOUT=$((TIMEOUT - 1))
+    esac
 
     sleep 1
   done
@@ -119,8 +120,12 @@ while :; do
   esac
 done
 
-if ! [ "$TIMEOUT" -eq "$TIMEOUT" ] 2>/dev/null; then
-  echoerr "Integer expected: $TIMEOUT"
+if [ "$TIMEOUT" -ge 0 ] 2>/dev/null; then
+  TIMEOUT=$((TIMEOUT))
+elif [ ''$TIMEOUT = '∞' ]; then
+  TIMEOUT='∞'
+else
+  echoerr "Non-negative integer expected: $TIMEOUT"
   usage 3
 fi
 

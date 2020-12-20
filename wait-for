@@ -120,7 +120,7 @@ if [ "$TIMEOUT" -ge 0 ] 2>/dev/null; then
 elif [ ''$TIMEOUT = '∞' ] || [ ''$TIMEOUT = infinity ]; then
   TIMEOUT=infinity
 else
-  echoerr "Non-negative integer expected: $TIMEOUT"
+  echoerr "Error: invalid timeout '$TIMEOUT'"
   usage 3
 fi
 

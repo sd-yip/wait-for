@@ -42,13 +42,8 @@ wait_for() {
           set -- "$@" "$result"
         done
 
-        TIMEOUT=$2
-        QUIET=$3
-        HOST=$4
-        PORT=$5
-        result=$6
+        TIMEOUT=$2 QUIET=$3 HOST=$4 PORT=$5 result=$6
         shift 6
-
         exec "$@"
       fi
       exit 0

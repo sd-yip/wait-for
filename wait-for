@@ -50,7 +50,7 @@ wait_for() {
     fi
 
     case $TIMEOUT in
-      infinity) ;;
+      ∞) ;;
       0) break ;;
       *) TIMEOUT=$((TIMEOUT - 1))
     esac
@@ -117,11 +117,12 @@ done
 
 if [ "$TIMEOUT" -ge 0 ] 2>/dev/null; then
   TIMEOUT=$((TIMEOUT))
-elif [ ''$TIMEOUT = '∞' ] || [ ''$TIMEOUT = infinity ]; then
-  TIMEOUT=infinity
 else
-  echoerr "Error: invalid timeout '$TIMEOUT'"
-  usage 3
+  # shellcheck disable=SC2018,SC2019
+  case $(echo $TIMEOUT | tr A-Z a-z) in
+    ∞|inf|infinity) TIMEOUT='∞' ;;
+    *) echoerr "Error: invalid timeout '$TIMEOUT'"; usage 3
+  esac
 fi
 
 if [ "$HOST" = "" ]; then

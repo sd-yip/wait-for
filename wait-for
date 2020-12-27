@@ -64,8 +64,8 @@ wait_for() {
 while :; do
   case "$1" in
     *:* )
-    HOST=$(printf "%s\n" "$1"| cut -d : -f 1)
-    PORT=$(printf "%s\n" "$1"| cut -d : -f 2)
+    PORT=$(echo "$1" | awk -F: '{print $NF}')
+    HOST=${1%:$PORT}
     shift 1
     ;;
     -q | --quiet)

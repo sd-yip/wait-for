@@ -2,11 +2,7 @@
 
 set -- "$@" -- "$TIMEOUT" "$QUIET" "$HOST" "$PORT" "$result"
 TIMEOUT=15
-QUIET=0
-
-echoerr() {
-  if [ "$QUIET" -ne 1 ]; then printf "%s\n" "$*" 1>&2; fi
-}
+QUIET=
 
 usage() {
   exitcode="$1"
@@ -26,7 +22,7 @@ USAGE
 
 wait_for() {
  if ! command -v nc >/dev/null; then
-    echoerr 'nc command is missing!'
+    echo >&2 'nc command is missing!'
     exit 1
   fi
 
@@ -57,7 +53,10 @@ wait_for() {
 
     sleep 1
   done
-  echoerr "Operation timed out"
+
+  if [ -z "$QUIET" ]; then
+    echo >&2 'Operation timed out'
+  fi
   exit 1
 }
 
@@ -73,8 +72,7 @@ while :; do
     shift 1
     ;;
     -q-*)
-    QUIET=0
-    echoerr "Unknown option: $1"
+    echo >&2 "Unknown option: $1"
     usage 1
     ;;
     -q*)
@@ -103,13 +101,11 @@ while :; do
     usage 0
     ;;
     -*)
-    QUIET=0
-    echoerr "Unknown option: $1"
+    echo >&2 "Unknown option: $1"
     usage 1
     ;;
     *)
-    QUIET=0
-    echoerr "Unknown argument: $1"
+    echo >&2 "Unknown argument: $1"
     usage 1
     ;;
   esac
@@ -121,12 +117,12 @@ else
   # shellcheck disable=SC2018,SC2019
   case $(echo $TIMEOUT | tr A-Z a-z) in
     ∞|inf|infinity) TIMEOUT='∞' ;;
-    *) echoerr "Error: invalid timeout '$TIMEOUT'"; usage 3
+    *) echo >&2 "Error: invalid timeout '$TIMEOUT'"; usage 3
   esac
 fi
 
 if [ "$HOST" = "" ]; then
-  echoerr "Error: you need to provide a host and port to test."
+  echo >&2 'Error: you need to provide a host and port to test.'
   usage 2
 fi
 

@@ -5,8 +5,7 @@ TIMEOUT=15
 QUIET=
 
 usage() {
-  exitcode="$1"
-  cat << USAGE >&2
+  cat >&2 <<USAGE
 Usage:
   $0 host:port [-t timeout] [-- command args]
   -q | --quiet                        Do not output any status messages
@@ -17,21 +16,16 @@ Source:
   https://github.com/sd-yip/wait-for/
 
 USAGE
-  exit "$exitcode"
+  exit "$1"
 }
 
 wait_for() {
- if ! command -v nc >/dev/null; then
-    echo >&2 'nc command is missing!'
-    exit 1
-  fi
-
   while :; do
-    nc -z "$HOST" "$PORT" > /dev/null 2>&1
-    
+    nc -z "$HOST" "$PORT" >/dev/null 2>&1
+
     result=$?
-    if [ $result -eq 0 ] ; then
-      if [ $# -gt 6 ] ; then
+    if [ $result -eq 0 ]; then
+      if [ $# -gt 6 ]; then
         for result in $(seq $(($# - 6))); do
           result=$1
           shift
@@ -61,13 +55,13 @@ wait_for() {
 }
 
 while :; do
-  case "$1" in
-    *:* )
+  case $1 in
+    *:*)
     PORT=$(echo "$1" | awk -F: '{print $NF}')
     HOST=${1%:$PORT}
     shift 1
     ;;
-    -q | --quiet)
+    -q|--quiet)
     QUIET=1
     shift 1
     ;;
@@ -81,7 +75,7 @@ while :; do
     shift 1
     set -- -"${result#-q}" "$@"
     ;;
-    -t | --timeout)
+    -t|--timeout)
     TIMEOUT="$2"
     shift 2
     ;;
@@ -107,7 +101,6 @@ while :; do
     *)
     echo >&2 "Unknown argument: $1"
     usage 1
-    ;;
   esac
 done
 
@@ -121,9 +114,14 @@ else
   esac
 fi
 
-if [ "$HOST" = "" ]; then
+if [ -z "$HOST" ]; then
   echo >&2 'Error: you need to provide a host and port to test.'
   usage 2
+fi
+
+if ! command -v nc >/dev/null; then
+  echo >&2 'nc command is missing!'
+  exit 1
 fi
 
 wait_for "$@"

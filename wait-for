@@ -120,8 +120,8 @@ if [ -z "$HOST" ]; then
 fi
 
 if ! command -v nc >/dev/null; then
-  echo >&2 'nc command is missing!'
-  exit 1
+  echo >&2 'Error: nc command is missing!'
+  exit 4
 fi
 
 wait_for "$@"
